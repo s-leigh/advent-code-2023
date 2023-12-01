@@ -1,6 +1,6 @@
 import { describe, test } from "node:test"
 import assert from "node:assert"
-import { day01Part01 } from "../src/day01"
+import { day01Part01, day01Part02 } from "../src/day01"
 import fs from "fs"
 
 describe("Day 01", () => {
@@ -17,5 +17,23 @@ treb7uchet`
     const input = fs.readFileSync("./input/day01Input").toString()
     const result = day01Part01(input)
     assert.strictEqual(result, 54388)
+  })
+
+  test("Day 01 part 02 sample input", () => {
+    const sampleInput = `two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen`
+    const result = day01Part02(sampleInput)
+    assert.strictEqual(result, 281)
+  })
+
+  test("Day 01 part 02", () => {
+    const input = fs.readFileSync("./input/day01Input").toString()
+    const result = day01Part02(input)
+    assert.strictEqual(result, 53515)
   })
 })
