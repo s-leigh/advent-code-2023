@@ -1,4 +1,4 @@
-const splitInput = (input: string) => input.split("\n")
+import { splitInputIntoLines } from "./common"
 
 const part01Regex = /(?=([0-9]))/g
 const part02Regex = /(?=([0-9]|one|two|three|four|five|six|seven|eight|nine))/g
@@ -19,7 +19,7 @@ export const day01Part01 = (input: string) => sum(input, part01Regex)
 export const day01Part02 = (input: string) => sum(input, part02Regex)
 
 const sum = (input: string, regex: RegExp): number => {
-  const numbers = splitInput(input)
+  const numbers = splitInputIntoLines(input)
     .map(line => regexIterator(line, regex)
       ?.filter(match => match !== null)
       .map(match => match.length > 1 ? wordToDigit[match as keyof typeof wordToDigit] : match)
