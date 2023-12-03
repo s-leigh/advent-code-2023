@@ -6,35 +6,31 @@ const PART_2_REGEX = /(?<number>[0-9]+)|(?<symbol>\*)/g
 type Element = {
   x: number,
   y: number,
-  length: number,
   contents: string,
-  type: "number" | "symbol"
+  type: "symbol" | "number"
 }
 
 const parseInput = (
   splitInput: string[],
   regex: RegExp,
-  symbols: Element[] = [],
-  numbers: Element[] = [],
+  output: Element[][] = [[], []],
   yIndex: number = 0
-): [Element[], Element[]] => {
-  if (splitInput.length === 0) return [symbols, numbers]
-
-  const newSymbols: Element[] = []
-  const newNumbers: Element[] = []
+): Element[][] => {
+  if (splitInput.length === 0) return output
+  const newSymbols = []
+  const newNumbers = []
   for (const match of splitInput[0].matchAll(regex)) {
     const type: "symbol" | "number" = match.groups?.symbol ? "symbol" : "number"
     const element = {
       x: match.index!,
       y: yIndex,
-      length: match.groups?.symbol ? 1 : match[0].length,
       contents: match[0],
       type
     }
-    element.type === "symbol" ? newSymbols.push(element) : newNumbers.push(element)
+    type === "symbol" ? newSymbols.push(element) : newNumbers.push(element)
   }
-
-  return parseInput(splitInput.slice(1), regex, symbols.concat(newSymbols), numbers.concat(newNumbers), yIndex + 1)
+  const newOutput = [output[0].concat(newSymbols), output[1].concat(newNumbers)]
+  return parseInput(splitInput.slice(1), regex, newOutput, yIndex + 1)
 }
 
 const isNearSymbol = (number: Element, symbol: Element): boolean => {
@@ -43,23 +39,32 @@ const isNearSymbol = (number: Element, symbol: Element): boolean => {
   return Math.abs(number.x - symbol.x) <= 1 || (number.x < symbol.x && symbol.x - number.x <= number.contents.length)
 }
 
+// We only need to check the rows above, equal to and below the symbol
+const numbersToCheck = (symbol: Element, elements: Element[], totalLength: number): Element[] => {
+  const linesToCheck = [symbol.y - 1, symbol.y, symbol.y + 1].filter(x => x >= 0 && x <= totalLength - 1)
+  return elements.filter(e => linesToCheck.includes(e.y))
+}
+
 export const day03Part01 = (input: string): number => {
-  const [symbols, numbers] = parseInput(splitInputIntoLines(input), PART_1_REGEX)
-  const partNumbers = symbols.flatMap(s => numbers.filter(n => isNearSymbol(n, s)))
+  const splitInput = splitInputIntoLines(input)
+  const [symbols, numbers] = parseInput(splitInput, PART_1_REGEX)
+  const partNumbers = symbols.flatMap((s) => numbersToCheck(s, numbers, splitInput.length).filter(n => isNearSymbol(n, s)))
   return partNumbers.reduce((prev, curr) => prev + parseInt(curr.contents), 0)
 }
 
 export const day03Part02 = (input: string): number => {
-  const [asterisks, numbers] = parseInput(splitInputIntoLines(input), PART_2_REGEX)
+  const splitInput = splitInputIntoLines(input)
+  const [asterisks, numbers] = parseInput(splitInput, PART_2_REGEX)
+  const nearAsterisk: Element[][] = []
+  asterisks.forEach((asterisk, asteriskI) =>
+    numbersToCheck(asterisk, numbers, splitInput.length).forEach(n => {
+      if (isNearSymbol(n, asterisk)) {
+        nearAsterisk[asteriskI] ? nearAsterisk[asteriskI].push(n) : nearAsterisk[asteriskI] = [n]
+      }
+    })
+  )
 
-  const nearAsteriskIndexed: Element[][] = []
-  asterisks.forEach((asterisk, asteriskI) => numbers.forEach(n => {
-    if (isNearSymbol(n, asterisk)) {
-      nearAsteriskIndexed[asteriskI] ? nearAsteriskIndexed[asteriskI].push(n) : nearAsteriskIndexed[asteriskI] = [n]
-    }
-  }))
-
-  const gears = nearAsteriskIndexed.filter(elements => elements.length == 2)
+  const gears = nearAsterisk.filter(elements => elements.length == 2)
   return gears
     .map(e => parseInt(e[0].contents) * parseInt(e[1].contents))
     .reduce((a, b) => a + b)
