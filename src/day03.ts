@@ -37,3 +37,25 @@ export const day03Part01 = (input: string): number => {
 
   return partNumbers.reduce((prev, curr) => prev + parseInt(curr.contents), 0)
 }
+
+export const day03Part02 = (input: string): number => {
+  const elements = splitInputIntoLines(input).map((inputLine, i) => parseLine(inputLine, i))
+
+  const asterisks = elements.flatMap(line => line.filter(e => e.type === "symbol" && e.contents === "*"))
+  const numbers = elements.flatMap(line => line.filter(e => e.type === "number"))
+  // asterisk coords are x,y as string, e.g. (3,4) is "3,4", 0-indexed
+  const nearAsterisk: { [asteriskCoords: string]: Element[] } = {}
+  asterisks.forEach(s => numbers.forEach(n => {
+    if (isNearSymbol(n, s)) {
+      const asteriskCoordsKey = `${s.x},${s.y}`
+      nearAsterisk[asteriskCoordsKey] ? nearAsterisk[asteriskCoordsKey].push(n) : nearAsterisk[asteriskCoordsKey] = [n]
+    }
+  }))
+
+  const gears = Object.keys(nearAsterisk)
+    .filter(asteriskCoords => nearAsterisk[asteriskCoords].length == 2).map(asteriskCoords => nearAsterisk[asteriskCoords])
+  
+  return gears
+    .map(e => parseInt(e[0].contents) * parseInt(e[1].contents))
+    .reduce((a, b) => a + b)
+}
