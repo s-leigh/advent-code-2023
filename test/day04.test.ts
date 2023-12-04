@@ -1,6 +1,6 @@
 import { describe, test } from "node:test"
 import assert from "node:assert"
-import { day04Part01 } from "../src/day04"
+import { day04Part01, day04Part02 } from "../src/day04"
 import fs from "fs"
 
 const SAMPLE_INPUT = `Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
@@ -20,5 +20,15 @@ describe("Day 04", () => {
   test("Day 04 part 01", () => {
     const result = day04Part01(input)
     assert.strictEqual(result, 24542)
+  })
+
+  test("Day 04 part 02 sample input", () => {
+    const result = day04Part02(SAMPLE_INPUT)
+    assert.strictEqual(result, 30)
+  })
+
+  test("Day 04 part 02", () => {
+    const result = day04Part02(input)
+    assert.strictEqual(result, 8736438)
   })
 })
