@@ -7,6 +7,7 @@ declare global {
     min(): number
     max(): number
     product(): number
+    last(): T
   }
 }
 
@@ -15,6 +16,7 @@ Array.prototype.filterNotEmpty = function () { return this.filter(s => s !== "")
 Array.prototype.min = function () { return this.reduce((a, b) => b < a ? b : a) }
 Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) }
 Array.prototype.product = function () { return this.reduce((a, b) => a * b) }
+Array.prototype.last = function () { return this[this.length - 1] }
 
 export const splitInputIntoLines = (input: string) => input.split("\n")
 
