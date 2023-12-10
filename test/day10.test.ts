@@ -28,8 +28,8 @@ describe("Day 10", () => {
     assert.strictEqual(result, 8)
   })
 
-  // test("Day 10 part 01 ", () => {
-  //   const result = day10Part01(input)
-  //   assert.strictEqual(result, 8)
-  // })
+  test("Day 10 part 01 ", () => {
+    const result = day10Part01(input)
+    assert.strictEqual(result, 6738)
+  })
 })
