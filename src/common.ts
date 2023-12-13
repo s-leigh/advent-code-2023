@@ -19,5 +19,6 @@ Array.prototype.product = function () { return this.reduce((a, b) => a * b) }
 Array.prototype.last = function () { return this[this.length - 1] }
 
 export const splitInputIntoLines = (input: string) => input.split("\n")
+export const splitInputIntoLinesWindowsStyle = (input: string) => input.split("\r\n")
 
 export const arrayOfIndices = (length: number) => Array(length).fill(0).map((_, i) => i)
