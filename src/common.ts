@@ -18,17 +18,33 @@ Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) 
 Array.prototype.product = function () { return this.reduce((a, b) => a * b) }
 Array.prototype.last = function () { return this[this.length - 1] }
 
+export type CardinalDirection = "N" | "W" | "S" | "E"
+
 export const splitInputIntoLines = (input: string) => input.split("\n")
 export const splitInputIntoLinesWindowsStyle = (input: string) => input.split("\r\n")
 
 export const arrayOfIndices = (length: number) => Array(length).fill(0).map((_, i) => i)
 
-export const parseVertically = (map: string[]): string[][] => {
-  const vertical: string[][] = []
-  for (let x = 0; x < map[0].length; x++) {
-    map.forEach((line) => {
-      vertical[x] ? vertical[x].push(line[x]) : vertical[x] = [line[x]]
+// Reflection axis is top left to bottom right
+// so line y=0 becomes x=0
+export const reflectMatrixDiagonally = (matrix: string[]): string[] => {
+  const reflected: string[] = []
+  for (let x = 0; x < matrix[0].length; x++) {
+    matrix.forEach((line) => {
+      reflected[x] ? reflected[x] += line[x] : reflected[x] = line[x]
     })
   }
-  return vertical
+  return reflected
 }
+
+export const rotateMatrixAnticlockwise = (matrix: string[]): string[] => {
+  const rotated: string[] = []
+  for (let x = 0; x < matrix[0].length; x++) {
+    matrix.forEach((line) => {
+      rotated[line.length - x] ? rotated[line.length - x] += line[x] : rotated[line.length - x] = line[x]
+    })
+  }
+  return rotated
+}
+
+export const printableMatrix = (matrix: string[][]) => matrix.map(x => x.join("")).join("\n")
