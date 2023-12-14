@@ -1,0 +1,29 @@
+import { describe, test } from "node:test"
+import assert from "node:assert"
+import fs from "fs"
+import { day14Part01 } from "../src/day14"
+
+const SAMPLE_INPUT = `O....#....
+O.OO#....#
+.....##...
+OO.#O....O
+.O.....O#.
+O.#..O.#.#
+..O..#O..O
+.......O..
+#....###..
+#OO..#....`
+
+const input = fs.readFileSync("./input/day14Input").toString()
+
+describe("Day 14", () => {
+  test("Day 14 part 01 sample input", () => {
+    const result = day14Part01(SAMPLE_INPUT)
+    assert.strictEqual(result, 136)
+  })
+
+  test("Day 14 part 01", () => {
+    const result = day14Part01(input)
+    assert.strictEqual(result, 110565)
+  })
+})
