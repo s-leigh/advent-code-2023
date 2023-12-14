@@ -28,20 +28,20 @@ export const arrayOfIndices = (length: number) => Array(length).fill(0).map((_, 
 // Reflection axis is top left to bottom right
 // so line y=0 becomes x=0
 export const reflectMatrixDiagonally = (matrix: string[]): string[] => {
-  const reflected: string[] = []
+  const reflected: string[] = Array(matrix[0].length).fill('')
   for (let x = 0; x < matrix[0].length; x++) {
     matrix.forEach((line) => {
-      reflected[x] ? reflected[x] += line[x] : reflected[x] = line[x]
+      reflected[x] += line[x]
     })
   }
   return reflected
 }
 
 export const rotateMatrixAnticlockwise = (matrix: string[]): string[] => {
-  const rotated: string[] = []
+  const rotated: string[] = Array(matrix[0].length).fill('')
   for (let x = 0; x < matrix[0].length; x++) {
     matrix.forEach((line) => {
-      rotated[line.length - x] ? rotated[line.length - x] += line[x] : rotated[line.length - x] = line[x]
+      rotated[line.length - 1 - x] += line[x]
     })
   }
   return rotated
