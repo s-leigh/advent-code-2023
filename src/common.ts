@@ -28,7 +28,7 @@ export const arrayOfIndices = (length: number) => Array(length).fill(0).map((_, 
 // Reflection axis is top left to bottom right
 // so line y=0 becomes x=0
 export const reflectMatrixDiagonally = (matrix: string[]): string[] => {
-  const reflected: string[] = Array(matrix[0].length).fill('')
+  const reflected: string[] = Array(matrix[0].length).fill("")
   for (let x = 0; x < matrix[0].length; x++) {
     matrix.forEach((line) => {
       reflected[x] += line[x]
@@ -38,7 +38,7 @@ export const reflectMatrixDiagonally = (matrix: string[]): string[] => {
 }
 
 export const rotateMatrixAnticlockwise = (matrix: string[]): string[] => {
-  const rotated: string[] = Array(matrix[0].length).fill('')
+  const rotated: string[] = Array(matrix[0].length).fill("")
   for (let x = 0; x < matrix[0].length; x++) {
     matrix.forEach((line) => {
       rotated[line.length - 1 - x] += line[x]
