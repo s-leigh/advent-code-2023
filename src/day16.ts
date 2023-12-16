@@ -47,13 +47,13 @@ const alreadyHandled = ({ x, y, direction }: CoordsAndDirections, visitedMap: Ma
 
 const followLines = (matrix: string[][], lineInstructions: CoordsAndDirections[], visitedMap: Map<string, string[]>): void => {
   if (lineInstructions.length === 0) return
-  const newTodos: CoordsAndDirections[] = []
+  const newInstructions: CoordsAndDirections[] = []
   const alreadyHandledOrSplitter = (position: CoordsAndDirections): boolean => {
     if (alreadyHandled(position, visitedMap)) return true
     addToHandled(position, visitedMap)
     const element = matrix[position.y][position.x]
     if (mustHandleSplitter(element, position.direction)) {
-      newTodos.push(...generateInstructions(element, position, matrix.length, matrix[0].length))
+      newInstructions.push(...generateInstructions(element, position, matrix.length, matrix[0].length))
       return true
     }
     return false
@@ -77,7 +77,7 @@ const followLines = (matrix: string[][], lineInstructions: CoordsAndDirections[]
       }
     }
   })
-  return followLines(matrix, newTodos, visitedMap)
+  return followLines(matrix, newInstructions, visitedMap)
 }
 
 export const day16Part01 = (input: string): number => {
@@ -86,4 +86,21 @@ export const day16Part01 = (input: string): number => {
   const visitedMap: Map<string, string[]> = new Map()
   followLines(matrix, startingInstruction, visitedMap)
   return visitedMap.size
+}
+
+export const day16Part02 = (input: string): number => {
+  const matrix = splitInputIntoLinesWindowsStyle(input).map(s => s.split(""))
+  const startingInstructions: CoordsAndDirections[] = []
+  for (let x = 0; x < matrix[0].length; x++) {
+    startingInstructions.push({x, y: 0, direction: "D"}, {x, y: matrix[0].length - 1, direction: "U"})
+  }
+  for (let y = 0; y < matrix.length; y++) {
+    startingInstructions.push({x: 0, y, direction: "R"}, {x: matrix.length - 1, y, direction: "L"})
+  }
+
+  return startingInstructions.map(si => {
+    const visitedMap: Map<string, string[]> = new Map()
+    followLines(matrix, [si], visitedMap)
+    return visitedMap.size
+  }).max()
 }
