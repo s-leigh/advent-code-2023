@@ -19,6 +19,7 @@ Array.prototype.product = function () { return this.reduce((a, b) => a * b) }
 Array.prototype.last = function () { return this[this.length - 1] }
 
 export type CardinalDirection = "N" | "W" | "S" | "E"
+export type RelativeDirection = "U" | "L" | "D" | "R"
 
 export const splitInputIntoLines = (input: string) => input.split("\n")
 export const splitInputIntoLinesWindowsStyle = (input: string) => input.split("\r\n")

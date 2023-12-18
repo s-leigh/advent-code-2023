@@ -1,7 +1,7 @@
 import { describe, test } from "node:test"
 import assert from "node:assert"
 import fs from "fs"
-import { day18Part01 } from "../src/day18"
+import { day18Part01, day18Part02 } from "../src/day18"
 
 const SAMPLE_INPUT = `R 6 (#70c710)
 D 5 (#0dc571)
@@ -29,5 +29,15 @@ describe("Day 18", () => {
   test("Day 18 part 01", () => {
     const result = day18Part01(input)
     assert.strictEqual(result, 58550)
+  })
+
+  test("Day 18 part 02 sample input", () => {
+    const result = day18Part02(SAMPLE_INPUT)
+    assert.strictEqual(result, 952408144115)
+  })
+
+  test("Day 18 part 02", () => {
+    const result = day18Part02(input)
+    assert.strictEqual(result, 47452118468566)
   })
 })
