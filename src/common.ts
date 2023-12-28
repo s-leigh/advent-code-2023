@@ -1,22 +1,22 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Array<T> {
-    sum(): number
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     filterNotEmpty(): Array<T>
-    min(): number
-    max(): number
-    product(): number
     last(): T
+    max(): number
+    min(): number
+    product(): number
+    removeDuplicates(): Array<T>
+    sum(): number
   }
 }
 
-Array.prototype.sum = function () { return this.reduce((a, b) => a + b) }
 Array.prototype.filterNotEmpty = function () { return this.filter(s => s !== "") }
-Array.prototype.min = function () { return this.reduce((a, b) => b < a ? b : a) }
-Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) }
-Array.prototype.product = function () { return this.reduce((a, b) => a * b, 1) }
 Array.prototype.last = function () { return this[this.length - 1] }
+Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) }
+Array.prototype.min = function () { return this.reduce((a, b) => b < a ? b : a) }
+Array.prototype.product = function () { return this.reduce((a, b) => a * b, 1) }
+Array.prototype.removeDuplicates = function () { return this.reduce((acc, curr) => !acc.includes(curr) ? acc.concat([curr]) : acc, [])}
+Array.prototype.sum = function () { return this.reduce((a, b) => a + b) }
 
 export type CardinalDirection = "N" | "W" | "S" | "E"
 export type RelativeDirection = "U" | "L" | "D" | "R"
@@ -55,3 +55,5 @@ export const times = (count: number) => (fn: () => unknown) => {
     fn()
   }
 }
+
+export const withinBounds = (n: number, dimension: number) => n >= 0 && n < dimension
