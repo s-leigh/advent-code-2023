@@ -1,4 +1,4 @@
-import { splitInputIntoLinesWindowsStyle } from "./common"
+import { splitInputIntoLines } from "./common"
 
 type CoordsAndDirections = {
   x: number
@@ -81,7 +81,7 @@ const followLines = (matrix: string[][], lineInstructions: CoordsAndDirections[]
 }
 
 export const day16Part01 = (input: string): number => {
-  const matrix = splitInputIntoLinesWindowsStyle(input).map(s => s.split(""))
+  const matrix = splitInputIntoLines(input).map(s => s.split(""))
   const startingInstruction: CoordsAndDirections[] = [{ x: 0, y: 0, direction: "R" }]
   const visitedMap: Map<string, string[]> = new Map()
   followLines(matrix, startingInstruction, visitedMap)
@@ -89,7 +89,7 @@ export const day16Part01 = (input: string): number => {
 }
 
 export const day16Part02 = (input: string): number => {
-  const matrix = splitInputIntoLinesWindowsStyle(input).map(s => s.split(""))
+  const matrix = splitInputIntoLines(input).map(s => s.split(""))
   const startingInstructions: CoordsAndDirections[] = []
   for (let x = 0; x < matrix[0].length; x++) {
     startingInstructions.push({x, y: 0, direction: "D"}, {x, y: matrix[0].length - 1, direction: "U"})

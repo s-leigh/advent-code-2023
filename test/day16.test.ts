@@ -3,6 +3,7 @@ import assert from "node:assert"
 import fs from "fs"
 import { day16Part01, day16Part02 } from "../src/day16"
 
+// Backslashes at end of line are read as escape characters when copied straight into a string
 const sampleInput = fs.readFileSync("./input/day16SampleInput").toString()
 
 const input = fs.readFileSync("./input/day16Input").toString()

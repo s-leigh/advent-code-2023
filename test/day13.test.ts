@@ -3,7 +3,22 @@ import assert from "node:assert"
 import fs from "fs"
 import { day13Part01, day13Part02 } from "../src/day13"
 
-const sampleInput = fs.readFileSync("./input/day13SampleInput").toString()
+const sampleInput = `#.##..##.
+..#.##.#.
+##......#
+##......#
+..#.##.#.
+..##..##.
+#.#.##.#.
+
+#...##..#
+#....#..#
+..##..###
+#####.##.
+#####.##.
+..##..###
+#....#..#`
+
 const input = fs.readFileSync("./input/day13Input").toString()
 
 describe("Day 13", () => {

@@ -1,4 +1,4 @@
-import { splitInputIntoLinesWindowsStyle } from "./common"
+import { splitInputIntoLines } from "./common"
 
 const parseVertically = (map: string[]): string[] => {
   const vertical: string[][] = []
@@ -13,8 +13,8 @@ const parseVertically = (map: string[]): string[] => {
 const parseInput = (input: string): [string[][], string[][]] => {
   const newLineRegex = /(\n\n)|(\r\n\r\n)/g
   const individualMaps = input.split(newLineRegex).filter(x => x !== undefined && (x.includes(".") || x.includes("#")))
-  const horizontal = individualMaps.map(m => splitInputIntoLinesWindowsStyle(m))
-  const vertical = individualMaps.map(m => parseVertically(splitInputIntoLinesWindowsStyle(m)))
+  const horizontal = individualMaps.map(m => splitInputIntoLines(m))
+  const vertical = individualMaps.map(m => parseVertically(splitInputIntoLines(m)))
   return [horizontal, vertical]
 }
 
