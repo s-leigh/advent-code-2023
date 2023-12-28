@@ -15,7 +15,7 @@ Array.prototype.sum = function () { return this.reduce((a, b) => a + b) }
 Array.prototype.filterNotEmpty = function () { return this.filter(s => s !== "") }
 Array.prototype.min = function () { return this.reduce((a, b) => b < a ? b : a) }
 Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) }
-Array.prototype.product = function () { return this.reduce((a, b) => a * b) }
+Array.prototype.product = function () { return this.reduce((a, b) => a * b, 1) }
 Array.prototype.last = function () { return this[this.length - 1] }
 
 export type CardinalDirection = "N" | "W" | "S" | "E"
@@ -49,3 +49,9 @@ export const rotateMatrixAnticlockwise = (matrix: string[]): string[] => {
 }
 
 export const printableMatrix = (matrix: string[][]) => matrix.map(x => x.join("")).join("\n")
+
+export const times = (count: number) => (fn: () => unknown) => {
+  for (let i = 0; i < count; i++) {
+    fn()
+  }
+}
