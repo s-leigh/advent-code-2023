@@ -6,7 +6,12 @@ declare global {
     min(): number
     product(): number
     removeDuplicates(): Array<T>
+    sorted(compareFn: (a: T, b: T) => number): Array<T>
     sum(): number
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface Map<K, V> {
+    setOrAdd(key: K, value: unknown): void
   }
 }
 
@@ -15,8 +20,17 @@ Array.prototype.last = function () { return this[this.length - 1] }
 Array.prototype.max = function () { return this.reduce((a, b) => b < a ? a : b) }
 Array.prototype.min = function () { return this.reduce((a, b) => b < a ? b : a) }
 Array.prototype.product = function () { return this.reduce((a, b) => a * b, 1) }
-Array.prototype.removeDuplicates = function () { return this.reduce((acc, curr) => !acc.includes(curr) ? acc.concat([curr]) : acc, [])}
+Array.prototype.removeDuplicates = function () { return this.reduce((acc, curr) => !acc.includes(curr) ? acc.concat([curr]) : acc, []) }
+Array.prototype.sorted = function <T>(compareFn: (a: T, b: T) => number) {
+  const clone = [...this]
+  clone.sort(compareFn)
+  return clone
+}
 Array.prototype.sum = function () { return this.reduce((a, b) => a + b) }
+
+Map.prototype.setOrAdd = function <K, V>(k: K, v: V) {
+  this.set(k, this.get(k)?.concat(v) || [v])
+}
 
 export type CardinalDirection = "N" | "W" | "S" | "E"
 export type RelativeDirection = "U" | "L" | "D" | "R"
@@ -25,6 +39,11 @@ export const splitInputIntoLines = (input: string) => input.split("\n")
 export const splitInputIntoLinesWindowsStyle = (input: string) => input.split("\r\n")
 
 export const arrayOfIndices = (length: number) => Array(length).fill(0).map((_, i) => i)
+
+// Considers them to overlap if associated co-ordinates are equal (i.e. if r1's right edge is the same x-value as r2's left edge)
+export const rectanglesOverlap = (r1x1: number, r1x2: number, r1y1: number, r1y2: number, r2x1: number, r2x2: number, r2y1: number, r2y2: number): boolean =>
+  (r1x1 <= r2x2 && r1x2 >= r2x1)
+  && (r1y2 >= r2y1 && r1y1 <= r2y2)
 
 // Reflection axis is top left to bottom right
 // so line y=0 becomes x=0
