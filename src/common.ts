@@ -76,3 +76,11 @@ export const times = (count: number) => (fn: () => unknown) => {
 }
 
 export const withinBounds = (n: number, dimension: number) => n >= 0 && n < dimension
+
+export const cloneMap = <K, V extends Array<unknown>>(map: Map<K, V>): Map<K, V> => {
+  const clone = new Map()
+  ;[...map.entries()].forEach(([k, v]) => {
+    clone.set(k, [...v])
+  })
+  return clone
+}

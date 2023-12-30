@@ -1,4 +1,4 @@
-import { rectanglesOverlap, splitInputIntoLines } from "./common"
+import { cloneMap, rectanglesOverlap, splitInputIntoLines } from "./common"
 
 type Brick = {
   name: string | undefined
@@ -30,12 +30,12 @@ const bricksOverlap = (brick1: Brick, brick2: Brick): boolean => rectanglesOverl
   brick1.start.x, brick1.end.x, brick1.start.y, brick1.end.y, brick2.start.x, brick2.end.x, brick2.start.y, brick2.end.y
 )
 
-const fallenBricks = (bricksToProcess: Brick[], processedBricks: Brick[] = [], supporting: Map<Brick, Brick[]> = new Map(), supportedBy: Map<Brick, Brick[]> = new Map()): [Brick[], Map<Brick, Brick[]>, Map<Brick, Brick[]>] => {
+const bricksAtRest = (bricksToProcess: Brick[], processedBricks: Brick[] = [], supporting: Map<Brick, Brick[]> = new Map(), supportedBy: Map<Brick, Brick[]> = new Map()): [Brick[], Map<Brick, Brick[]>, Map<Brick, Brick[]>] => {
   if (bricksToProcess.length === 0) return [processedBricks, supporting, supportedBy]
 
   const thisBrick = { ...bricksToProcess[0] }
   if (thisBrick.start.z > thisBrick.end.z) throw new Error(`start z higher than end: ${JSON.stringify(thisBrick)}`)
-  if (thisBrick.start.z === 1) return fallenBricks(bricksToProcess.slice(1), [thisBrick, ...processedBricks], supporting, supportedBy)
+  if (thisBrick.start.z === 1) return bricksAtRest(bricksToProcess.slice(1), [thisBrick, ...processedBricks], supporting, supportedBy)
 
   const thisBrickIsSupportedBy = processedBricks.filter(b => bricksOverlap(b, thisBrick)).reduce((acc, curr) => {
     if (acc.length === 0 || curr.end.z > acc[0].end.z) return [curr]
@@ -49,16 +49,40 @@ const fallenBricks = (bricksToProcess: Brick[], processedBricks: Brick[] = [], s
   const brickHeight = thisBrick.end.z - thisBrick.start.z
   thisBrick.start.z = thisBrickIsSupportedBy[0]?.end.z + 1 || 1
   thisBrick.end.z = thisBrick.start.z + brickHeight
-  return fallenBricks(bricksToProcess.slice(1), [thisBrick, ...processedBricks], supporting, supportedBy)
+  return bricksAtRest(bricksToProcess.slice(1), [thisBrick, ...processedBricks], supporting, supportedBy)
 }
 
-const canDestroy = (brick: Brick, supporting: Map<Brick, Brick[]>, supportedBy: Map<Brick, Brick[]>): boolean => {
+const onlySupport = (brick: Brick, supporting: Map<Brick, Brick[]>, supportedBy: Map<Brick, Brick[]>): boolean => {
   const thisBrickIsSupporting = supporting.get(brick)
-  return !thisBrickIsSupporting || !thisBrickIsSupporting.some(b => supportedBy.get(b)?.length === 1)
+  return !!thisBrickIsSupporting && thisBrickIsSupporting.some(b => supportedBy.get(b)?.length === 1)
+}
+
+const chainReactionLength = (brick: Brick, supporting: Map<Brick, Brick[]>, supportedBy: Map<Brick, Brick[]>, firstIteration: boolean = true): number => {
+  const thisBrickIsSupportedBy = supportedBy.get(brick)
+  const thisBrickIsSupporting = supporting.get(brick)
+
+  // If it's the first iteration we're destroying this brick, so it doesn't matter if it's supported
+  if (thisBrickIsSupportedBy?.length && !firstIteration) return 0
+  if (!thisBrickIsSupporting?.length) return 1
+
+  thisBrickIsSupporting!.forEach(brickSupportedByThisOne => {
+    const supportingBricks = supportedBy.get(brickSupportedByThisOne)
+    supportingBricks!.splice(supportingBricks!.indexOf(brick), 1)
+  })
+  return 1 + thisBrickIsSupporting.map(b => chainReactionLength(b, supporting, supportedBy, false)).sum()
 }
 
 export const day22Part01 = (input: string): number => {
   const bricks = parseInput(input)
-  const [atRest, supporting, supportedBy] = fallenBricks(bricks)
-  return atRest.filter(b => canDestroy(b, supporting, supportedBy)).length
+  const [atRest, supporting, supportedBy] = bricksAtRest(bricks)
+  return atRest.filter(b => !onlySupport(b, supporting, supportedBy)).length
+}
+
+export const day22Part02 = (input: string): number => {
+  const bricks = parseInput(input)
+  const [atRest, supporting, supportedBy] = bricksAtRest(bricks)
+  const atRestSortedAsc = atRest.sorted((b1, b2) => b1.start.z - b2.start.z)
+  return atRestSortedAsc.map(b => chainReactionLength(b, cloneMap(supporting), cloneMap(supportedBy)))
+    .map(x => x - 1) // Comes back with total bricks that fall, not just the OTHER ones that fall
+    .sum()
 }
