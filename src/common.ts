@@ -84,3 +84,11 @@ export const cloneMap = <K, V extends Array<unknown>>(map: Map<K, V>): Map<K, V>
   })
   return clone
 }
+
+export const cloneMapSingleValue = <K, V>(map: Map<K,V>): Map<K, V> => {
+  const clone = new Map()
+  ;[...map.entries()].forEach(([k, v]) => {
+    clone.set(k, v)
+  })
+  return clone
+}
