@@ -34,6 +34,7 @@ Map.prototype.setOrAdd = function <K, V>(k: K, v: V) {
 
 export type CardinalDirection = "N" | "W" | "S" | "E"
 export type RelativeDirection = "U" | "L" | "D" | "R"
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 export const splitInputIntoLines = (input: string) => input.split("\n")
 export const splitInputIntoLinesWindowsStyle = (input: string) => input.split("\r\n")
